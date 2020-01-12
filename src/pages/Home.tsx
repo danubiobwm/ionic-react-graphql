@@ -1,7 +1,21 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import {
+  IonContent,
+  IonHeader,
+  IonPage,
+  IonTitle,
+  IonToolbar,
+  IonItem,
+} from '@ionic/react';
 import React from 'react';
 
+import { useLaunchesPastQuery } from '../generated/graphql';
+
+
+
+
 const Home: React.FC = () => {
+ // const { data, loading } = useQuery<LaunchesPastQuery>(LAUCHES_PAST_QUERY);
+ const { data, loading } = useLaunchesPastQuery();
   return (
     <IonPage>
       <IonHeader>
@@ -10,14 +24,16 @@ const Home: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
-        The world is your oyster.
-        <p>
-          If you get lost, the{' '}
-          <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/">
-            docs
-          </a>{' '}
-          will be your guide.
-        </p>
+        {loading ? (
+          <p>Loading...</p>
+        ) : (
+          data &&
+          data.launchesPast.map((launch:any )=> (
+            <IonItem key={launch.id as string}>
+              {launch.mission_name} | {launch.rocket.rocket_name}
+            </IonItem>
+          ))
+        )}
       </IonContent>
     </IonPage>
   );
